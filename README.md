@@ -10,7 +10,7 @@ I use these algorithms for:
 - labels for supervised machine learning in learning momentum signals
 - studying market microstructure around large moves
 
-# AmplitudeBasedLabeler
+## AmplitudeBasedLabeler
 The labeler behavior is defined by two parameters (which seem intuitive from a trading perspective):
 
 - minimum trend / momentum amplitude of interest
@@ -22,10 +22,10 @@ The labeler behavior is defined by two parameters (which seem intuitive from a t
 There are other ways to define noise or extension, but these choises resulted in a super-simple model, that works well.   In addition an incremental OLS is performed to determine which points best fit the move, discarding outliers around the edges.
 
 
-# Examples
+## Examples
 Below are some examples of the same (intra-day) data series, parameterized for more noise, less noise, higher or lower minimum amplitudes.
 
-## Labeling (minamp = 20bps, Tinactive = 5mins)
+### Labeling (minamp = 20bps, Tinactive = 5mins)
 ```Python
 labeler = AmplitudeBasedLabeler (minamp = 20, Tinactive = 10)
 labels = labeler.label (df)
@@ -33,7 +33,7 @@ labeler.plot()
 ```
 ![Graph of labels](/docs/labeling.20.5.png)
 
-## Labeling (minamp = 20bps, Tinactive = 15mins)
+### Labeling (minamp = 20bps, Tinactive = 15mins)
 ```Python
 labeler = AmplitudeBasedLabeler (minamp = 20, Tinactive = 30)
 labels = labeler.label (df)
