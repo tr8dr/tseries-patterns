@@ -1,6 +1,10 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Extension
 import io
 
+try:
+    from Cython.Build import cythonize
+except ImportError:
+    sys.exit("Cython not found. Cython is needed to build this library.")
 
 def requirements(filename):
     reqs = list()
@@ -47,4 +51,6 @@ setup(
         'Source': 'https://github.com/tr8dr/mvlabeler',
         'Documentation': 'https://github.com/tr8dr/mvlabeler'
     },
+    
+    ext_modules=cythonize('mvlabeler/TrendLabeler.pyx', compiler_directives={'embedsignature': True})
 )
