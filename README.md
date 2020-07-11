@@ -20,4 +20,4 @@ There are other ways to define noise or extension, but these choises resulted in
 
 
 ## Examples
-The labeler uses a 
+https://github.com/tr8dr/mvlabeler/blob/master/notebooks/Intraday%20Example%20(XAUUSD).ipynb!
