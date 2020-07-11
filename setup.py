@@ -1,10 +1,29 @@
-from setuptools import setup, find_packages, Extension
+#!/usr/bin/env python
+# distutils: language=c++"
+
+from setuptools import find_packages
+from distutils.core import setup, Extension
+from Cython.Build import cythonize
+
 import io
+import os
+import sys
+import fnmatch
+import numpy
+
 
 try:
     from Cython.Build import cythonize
 except ImportError:
     sys.exit("Cython not found. Cython is needed to build this library.")
+
+def find_cython_files (basedir='mvlabeler'):
+    matches = []
+    for path, sub, files in os.walk(basedir):
+        for filename in fnmatch.filter(files, '*.pyx'):
+            matches.append (os.path.join (path, filename))
+
+    return matches
 
 def requirements(filename):
     reqs = list()
@@ -13,9 +32,10 @@ def requirements(filename):
             reqs.append(line.strip())
     return reqs
 
+modules = cythonize(find_cython_files(), language='c++')
 
 setup(
-    name='trendet',
+    name='mvlabeler',
     version='0.7',
     packages=find_packages(),
     url='https://github.com/tr8dr/mvlabeler',
@@ -42,15 +62,12 @@ setup(
         "trend detection", "financial trends", "quant", "stocks", "trading", 
     ]),
     python_requires='>=3',
-    extras_require={
-        "tests": requirements(filename='tests/requirements.txt'),
-        "docs": requirements(filename='docs/requirements.txt')
-    },
     project_urls={
         'Bug Reports': 'https://github.com/tr8dr/mvlabeler/issues',
         'Source': 'https://github.com/tr8dr/mvlabeler',
         'Documentation': 'https://github.com/tr8dr/mvlabeler'
     },
     
-    ext_modules=cythonize('mvlabeler/TrendLabeler.pyx', compiler_directives={'embedsignature': True})
+    ext_modules=modules,
+    include_dirs=[numpy.get_include()]
 )

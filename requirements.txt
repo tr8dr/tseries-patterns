@@ -1,4 +1,5 @@
-Cython
+Cython>=0.19
+plotnine>=0.7.0
 setuptools>=41.2.0
 numpy>=1.17.2
 pandas>=0.25.1
