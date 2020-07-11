@@ -43,6 +43,7 @@ setup(
     author_email='jonathan.shore@gmail.com',
     description='Momentum / Trend labeling for financial timeseries',
     install_requires=requirements(filename="requirements.txt"),
+    download_url = 'https://github.com/tr8dr/tseries-patterns/archive/V0_1.tar.gz',
     include_package_data=True,
     classifiers=[
         "Development Status :: 4 - Beta",
