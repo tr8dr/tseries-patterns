@@ -1,2 +1,2 @@
 # mv labeler (momentum / trend labeler)
-Labeler for trend / momentum in financial timeseries
+This is a collection of labeling functions for trend / momentum in financial timeseries.
