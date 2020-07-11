@@ -109,7 +109,7 @@ cdef class AmplitudeBasedLabeler:
     def plot(
         self,
         color_price = 'darkgray',
-        colors_dir = ["red", "#10a4f4"],
+        colors_dir = ["red", "lightgrey", "#10a4f4"],
         pointsize = 1.0,
         figsize = (10,8),
         title = ""):
@@ -125,6 +125,7 @@ cdef class AmplitudeBasedLabeler:
         """
         labels = self.df["label"]
         up = (labels > 0.0)
+        neutral = (labels == 0.0)
         down = (-labels > 0.0)
 
         df1 = pd.DataFrame({'stamp': self.df["stamp"], 'price': self.df["price"]})
@@ -132,8 +133,9 @@ cdef class AmplitudeBasedLabeler:
         plotnine.options.figure_size = figsize
         v = (ggplot() +
             geom_line(aes(x='stamp',y='price'), data=df1, color=color_price) +
-            geom_point(aes(x='stamp',y='price'), data=df1.loc[up], color=colors_dir[1], size=pointsize) +
             geom_point(aes(x='stamp',y='price'), data=df1.loc[down], color=colors_dir[0], size=pointsize) +
+            geom_point(aes(x='stamp',y='price'), data=df1.loc[neutral], color=colors_dir[1], size=pointsize) +
+            geom_point(aes(x='stamp',y='price'), data=df1.loc[up], color=colors_dir[2], size=pointsize) +
             scale_x_datetime_auto (df1["stamp"], figsize) +
             labs(title=title))
 

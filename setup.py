@@ -17,7 +17,7 @@ try:
 except ImportError:
     sys.exit("Cython not found. Cython is needed to build this library.")
 
-def find_cython_files (basedir='mvlabeler'):
+def find_cython_files (basedir='patterns'):
     matches = []
     for path, sub, files in os.walk(basedir):
         for filename in fnmatch.filter(files, '*.pyx'):
@@ -35,10 +35,10 @@ def requirements(filename):
 modules = cythonize(find_cython_files(), language='c++')
 
 setup(
-    name='mvlabeler',
+    name='patterns',
     version='0.7',
     packages=find_packages(),
-    url='https://github.com/tr8dr/mvlabeler',
+    url='https://github.com/tr8dr/patterns',
     license='MIT License',
     author='Jonathan Shore',
     author_email='jonathan.shore@gmail.com',
@@ -63,9 +63,9 @@ setup(
     ]),
     python_requires='>=3',
     project_urls={
-        'Bug Reports': 'https://github.com/tr8dr/mvlabeler/issues',
-        'Source': 'https://github.com/tr8dr/mvlabeler',
-        'Documentation': 'https://github.com/tr8dr/mvlabeler'
+        'Bug Reports': 'https://github.com/tr8dr/patterns/issues',
+        'Source': 'https://github.com/tr8dr/patterns',
+        'Documentation': 'https://github.com/tr8dr/patterns'
     },
     
     ext_modules=modules,
