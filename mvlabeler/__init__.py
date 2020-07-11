@@ -1,3 +1,3 @@
-from .PriceType import PriceType
-from .AmplitudeBasedLabeler import AmplitudeBasedLabeler
+from mvlabeler.common.PriceType import PriceType
+from mvlabeler.labelers.AmplitudeBasedLabeler import AmplitudeBasedLabeler
 

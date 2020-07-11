@@ -23,13 +23,15 @@
 #
 
 
-from libc.math cimport round, fabs, log, sqrt, fmin, fmax
 import pandas as pd
 import numpy as np
+
 import plotnine
 from plotnine import *
 
-from .PriceType import PriceType
+from ..common import PriceType
+from ..common import scale_x_datetime_auto
+
 
 cdef int max (int a, int b):
     if a > b:
@@ -57,8 +59,9 @@ cdef class AmplitudeBasedLabeler:
     Amplitude `minamp` can then be defined as, say, 25bps instead of amplitude in price terms.
     """
 
-    cdef double _minamp
-    cdef int _Tinactive
+    cdef double minamp
+    cdef int Tinactive
+    cdef object df
 
     def __init__(self, minamp, Tinactive):
         """
@@ -67,8 +70,8 @@ cdef class AmplitudeBasedLabeler:
         :param minamp: minimum amplitude of move (usually in bps)
         :param Tinactive: maximum inactive period where no new high (low) achieved (unit: # of samples)
         """
-        self._minamp = minamp
-        self._Tinactive = Tinactive
+        self.minamp = minamp
+        self.Tinactive = Tinactive
         self.df = None
 
 
@@ -87,8 +90,8 @@ cdef class AmplitudeBasedLabeler:
             raise Exception ("could not find price or time column in supplied dataframe")
 
         if isinstance(prices, pd.DataFrame):
-            times = columnFor (prices, ["time", "date", "stamp"])
-            prices = columnFor (prices, ["Close", "close", "price"])
+            times = columnFor (prices, ["time", "date", "Datetime", "stamp"])
+            prices = columnFor (prices, ["Adj Close", "Close", "close", "price"])
         else:
             prices = pd.Series(prices)
             times = np.array(0,prices.shape[0])
@@ -99,7 +102,7 @@ cdef class AmplitudeBasedLabeler:
 
         self._pass1 (cumr, labels)
         self._filter (cumr, labels)
-        self.df = pd.DataFrame({'stamp': times, 'price': cumr, 'label': labels}).set_index("stamp")
+        self.df = pd.DataFrame({'stamp': times, 'price': cumr, 'label': labels})
         return self.df
 
 
@@ -120,17 +123,18 @@ cdef class AmplitudeBasedLabeler:
         :param title: title associated with graph
         :return:
         """
-        labels = self.df.label
+        labels = self.df["label"]
         up = (labels > 0.0)
         down = (-labels > 0.0)
 
-        df1 = pd.DataFrame({'stamp': self.df.stamp, 'price': self.df.cumr})
+        df1 = pd.DataFrame({'stamp': self.df["stamp"], 'price': self.df["price"]})
 
         plotnine.options.figure_size = figsize
         v = (ggplot() +
             geom_line(aes(x='stamp',y='price'), data=df1, color=color_price) +
             geom_point(aes(x='stamp',y='price'), data=df1.loc[up], color=colors_dir[1], size=pointsize) +
             geom_point(aes(x='stamp',y='price'), data=df1.loc[down], color=colors_dir[0], size=pointsize) +
+            scale_x_datetime_auto (df1["stamp"], figsize) +
             labs(title=title))
 
         return v
@@ -164,13 +168,13 @@ cdef class AmplitudeBasedLabeler:
             v = cumr[Icursor]
 
             # determine whether there has been a retracement, requiring a split
-            if (Vmax - Vmin) >= self._minamp and Imin > Imax and (v - Vmin) >= self._minamp:
+            if (Vmax - Vmin) >= self.minamp and Imin > Imax and (v - Vmin) >= self.minamp:
                 self._apply_label (labels, Istart, Imax-1, 0.0)
                 self._apply_label (labels, Imax, Imin, -1.0)
                 Istart = Imin
                 Imax = Icursor
                 Vmax = v
-            elif (Vmax - Vmin) >= self._minamp and Imax > Imin and (Vmax - v) >= self._minamp:
+            elif (Vmax - Vmin) >= self.minamp and Imax > Imin and (Vmax - v) >= self.minamp:
                 self._apply_label (labels, Istart, Imin-1, 0.0)
                 self._apply_label (labels, Imin, Imax, +1.0)
                 Istart = Imax
@@ -178,8 +182,8 @@ cdef class AmplitudeBasedLabeler:
                 Vmin = v
 
             # check for "inactive" period where price has not progressed since latest min/max (upward direction)
-            elif Imax > Imin and (Icursor - Imax) >= self._Tinactive and (cumr[Icursor] - Vmax) < self._minamp:
-                if (Vmax - Vmin) >= self._minamp:
+            elif Imax > Imin and (Icursor - Imax) >= self.Tinactive and (cumr[Icursor] - Vmax) < self.minamp:
+                if (Vmax - Vmin) >= self.minamp:
                     self._apply_label (labels, Istart, Imin-1, 0.0)
                     self._apply_label (labels, Imin, Imax, +1.0)
                     self._apply_label (labels, Imax+1, Icursor, 0.0)
@@ -193,8 +197,8 @@ cdef class AmplitudeBasedLabeler:
                 Vmin = v
 
             # check for "inactive" period where price has not progressed since latest min/max (downward direction)
-            elif Imin > Imax and (Icursor - Imin) >= self._Tinactive and (Vmin - cumr[Icursor]) < self._minamp:
-                if (Vmax - Vmin) >= self._minamp:
+            elif Imin > Imax and (Icursor - Imin) >= self.Tinactive and (Vmin - cumr[Icursor]) < self.minamp:
+                if (Vmax - Vmin) >= self.minamp:
                     self._apply_label (labels, Istart, Imax-1, 0.0)
                     self._apply_label (labels, Imax, Imin, -1.0)
                     self._apply_label (labels, Imin+1, Icursor, 0.0)
@@ -219,12 +223,12 @@ cdef class AmplitudeBasedLabeler:
             Icursor += 1
 
         # finish end
-        if (Vmax - Vmin) >= self._minamp and Imin > Imax:
+        if (Vmax - Vmin) >= self.minamp and Imin > Imax:
             self._apply_label (labels, Istart, Imax-1, 0.0)
             self._apply_label (labels, Imax, Imin, -1.0)
             self._apply_label (labels, Imin+1, Icursor-1, 0.0)
 
-        elif (Vmax - Vmin) >= self._minamp and Imax > Imin:
+        elif (Vmax - Vmin) >= self.minamp and Imax > Imin:
             self._apply_label (labels, Istart, Imin-1, 0.0)
             self._apply_label (labels, Imin, Imax, +1.0)
             self._apply_label (labels, Imax+1, Icursor-1, 0.0)
@@ -265,6 +269,7 @@ cdef class AmplitudeBasedLabeler:
         cdef double Xc = 0.0
         cdef double Yc = 0.0
         cdef double dir = 0.0
+        cdef int i = 0
 
         while Ipos < len:
             dir = labels[Ipos]
@@ -290,16 +295,18 @@ cdef class AmplitudeBasedLabeler:
             fEx = 0.0
             fEy = 0.0
 
+            distance = 0.0
             for i in range(Istart, Iend+1):
-                Xc = i - Istart
+                Xc = float(i - Istart)
                 Yc = cumr[i]
                 fExy += Xc*Yc
                 fExx += Xc*Xc
                 fEx += Xc
                 fEy += Yc
 
-                beta = (fExy - fEx*fEy/ (Xc+1.0)) / (fExx - fEx*fEx/ (Xc+1.0))
-                distance = dir * beta * Xc
+                if Xc > 0.0:
+                    beta = (fExy - fEx*fEy/ (Xc+1.0)) / (fExx - fEx*fEx/ (Xc+1.0))
+                    distance = dir * beta * Xc
 
                 if distance > Vmaxfwd:
                     Vmaxfwd = distance
@@ -312,38 +319,40 @@ cdef class AmplitudeBasedLabeler:
             bEx = 0.0
             bEy = 0.0
 
+            distance = 0.0
             for i in range(Iend, Istart-1, -1):
-                Xc = Iend - i
+                Xc = float(Iend - i)
                 Yc = cumr[i]
                 bExy += Xc*Yc
                 bExx += Xc*Xc
                 bEx += Xc
                 bEy += Yc
 
-                beta = (bExy - bEx*bEy/ (Xc+1.0)) / (bExx - bEx*bEx/ (Xc+1.0))
-                distance = -dir * beta * Xc
+                if Xc > 0.0:
+                    beta = (bExy - bEx*bEy/ (Xc+1.0)) / (bExx - bEx*bEx/ (Xc+1.0))
+                    distance = -dir * beta * Xc
 
                 if distance > Vmaxback:
                     Vmaxback = distance
                     Imaxback = i
 
             # label forward region if meets size requirement
-            if Vmaxfwd >= self._minamp:
-                self._apply_labels (labels, Istart, Imaxfwd, dir)
-                self._apply_labels (labels, Imaxfwd+1, Imaxback-1, 0.0)
+            if Vmaxfwd >= self.minamp:
+                self._apply_label (labels, Istart, Imaxfwd, dir)
+                self._apply_label (labels, Imaxfwd+1, Imaxback-1, 0.0)
             else:
-                self._apply_labels (labels, Istart, Imaxback, 0.0)
+                self._apply_label (labels, Istart, Imaxback, 0.0)
 
             # label backward region is meets size requirement
-            if Vmaxback >= self._minamp:
-                self._apply_labels (labels, Imaxback, Iend, dir)
+            if Vmaxback >= self.minamp:
+                self._apply_label (labels, Imaxback, Iend, dir)
             else:
-                self._apply_labels (labels, max(Imaxback, Imaxfwd+1), Iend, 0.0)
+                self._apply_label (labels, max(Imaxback, Imaxfwd+1), Iend, 0.0)
 
             Ipos = Iend+1
 
 
-    cdef void _apply_labels (self, double[:] labels, int Istart, int Iend, double dir):
+    cdef void _apply_label (self, double[:] labels, int Istart, int Iend, double dir):
         for i in range (Istart, Iend+1):
             labels[i] = dir
 

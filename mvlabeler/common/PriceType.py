@@ -37,13 +37,13 @@ class PriceType(Enum):
         if isinstance(prices, np.ndarray):
             pass
         elif isinstance (prices, pd.Series):
-            prices = prices.values
+            prices = np.array(prices.values)
         else:
             prices = np.array(prices)
 
-        if self.value == self.CUMBPS:
+        if self.value == 2:
             return prices
-        elif self.value == self.PRICE:
+        elif self.value == 1:
             return np.log(prices / prices[0]) * 1e4
         else:
             return prices * 1e4
