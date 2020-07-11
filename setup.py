@@ -11,13 +11,12 @@ import sys
 import fnmatch
 import numpy
 
-
 try:
     from Cython.Build import cythonize
 except ImportError:
     sys.exit("Cython not found. Cython is needed to build this library.")
 
-def find_cython_files (basedir='patterns'):
+def find_cython_files (basedir='tseries_patterns'):
     matches = []
     for path, sub, files in os.walk(basedir):
         for filename in fnmatch.filter(files, '*.pyx'):
@@ -35,10 +34,10 @@ def requirements(filename):
 modules = cythonize(find_cython_files(), language='c++')
 
 setup(
-    name='patterns',
-    version='0.7',
+    name='tseries_patterns',
+    version='0.1',
     packages=find_packages(),
-    url='https://github.com/tr8dr/patterns',
+    url='https://github.com/tr8dr/tseries-patterns',
     license='MIT License',
     author='Jonathan Shore',
     author_email='jonathan.shore@gmail.com',
@@ -63,9 +62,9 @@ setup(
     ]),
     python_requires='>=3',
     project_urls={
-        'Bug Reports': 'https://github.com/tr8dr/patterns/issues',
-        'Source': 'https://github.com/tr8dr/patterns',
-        'Documentation': 'https://github.com/tr8dr/patterns'
+        'Bug Reports': 'https://github.com/tr8dr/tseries-patterns/issues',
+        'Source': 'https://github.com/tr8dr/tseries-patterns',
+        'Documentation': 'https://github.com/tr8dr/tseries-patterns'
     },
     
     ext_modules=modules,
