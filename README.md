@@ -30,6 +30,7 @@ labeler = AmplitudeBasedLabeler (minamp = 20, Tinactive = 10)
 labels = labeler.label (df)
 labeler.plot()
 ```
+(/docs/labeling.20.5.png)
 
 ## Labeling (minamp = 20bps, Tinactive = 15mins)
 ```Python
@@ -37,4 +38,6 @@ labeler = AmplitudeBasedLabeler (minamp = 20, Tinactive = 30)
 labels = labeler.label (df)
 labeler.plot()
 ```
+
+(/docs/labeling.20.15.png)
 
