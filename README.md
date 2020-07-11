@@ -10,6 +10,7 @@ I use these algorithms for:
 - labels for supervised machine learning in learning momentum signals
 - studying market microstructure around large moves
 
+# AmplitudeBasedLabeler
 The labeler behavior is defined by two parameters (which seem intuitive from a trading perspective):
 
 - minimum trend / momentum amplitude of interest
