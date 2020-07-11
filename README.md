@@ -1,7 +1,9 @@
-# mv labeler (momentum / trend labeler)
-This package will contain a collection of price pattern detectors (online and offline).  A few years ago developed an algorithm to label momentum and trend patterns in intra-day or daily price data.  In spite of its simplicity, has performed astonishingly well. As is not especially proprietary, thought to share this more broadly.
+# Price / Volume Patterns library
+This package will contain a collection of price pattern detectors (online and offline).  I am starting this library by open sourcing one of the labeling algorithms I use.
 
-I use this algorithms for:
+A few years ago developed an algorithm to label momentum and trend patterns in intra-day or daily price data.  In spite of its simplicity, has performed quite well as compared to a number of more complicated statistical approaches.  As is not especially proprietary, thought to share this more broadly.  I will be adding other pattern related algorithms to this library over time.
+
+I use these algorithms for:
 
 - collecting price moves for pattern analysis
 - comparing online trend or MR signal versus optimum behavior as identified ex-post by this labeler
