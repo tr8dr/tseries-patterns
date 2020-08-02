@@ -8,7 +8,7 @@ left (0.0) or right (1.0) of the distribution.  For strong upward (downward) mov
 1.0 (0.0).  We can calculate the signed volume for each bar as:
 
 $$
-signed\, volume_t = 2 (volume_t \; cdf(r_t / \sigma_{t})) - 1
+signed\, volume_t = 2 (volume_t \times cdf(r_t / \sigma_{t})) - 1
 $$   
 
 To get an overall sense of signed buy/sell imbalance momentum we use a hawkes process.  Hawkes processes model the intensity 
@@ -29,7 +29,7 @@ Putting this together the indicator is implemented as:
 
 $$
 \begin{align*} 
-signed \, volume_t &= 2 (volume_t \; cdf(r_t / \sigma_{t})) - 1 \\
+signed\, volume_t = 2 (volume_t \times cdf(r_t / \sigma_{t})) - 1 \\
 bvc(t) &= bvc(t-1) e^{-\kappa} + signed \, volume_t
 \end{align*}
 $$
