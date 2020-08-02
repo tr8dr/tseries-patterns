@@ -7,7 +7,7 @@ The cdf of the volatility normalized return of each bar indicates whether the re
 left (0.0) or right (1.0) of the distribution.  For strong upward (downward) moves, we expect a cdf value approaching
 1.0 (0.0).  We can calculate the signed volume for each bar as:
 
-<img src="https://render.githubusercontent.com/render/math?math=signed\, volume_t = 2 (volume_t \; cdf(r_t / \sigma_{t})) - 1">
+<img src="https://render.githubusercontent.com/render/math?math=signed \, volume_t = 2 (volume_t \; cdf(r_t / \sigma_{t})) - 1">
 
 To get an overall sense of signed buy/sell imbalance momentum we use a hawkes process.  Hawkes processes model the intensity 
 of events and are applicable for events which tend to cluster in a self-exciting manner.  The form of the Hawkes process we use is:
