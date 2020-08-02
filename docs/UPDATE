@@ -1,0 +1,3 @@
+python -m readme2tex --output HawkesBSI.md HawkesBSI.tex.md
+python -m readme2tex --output HawkesBVC.md HawkesBVC.tex.md
+

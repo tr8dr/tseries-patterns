@@ -13,7 +13,7 @@ I use these algorithms for:
 ## Functionality
 Here is a (growing) list of functionality provided by the library
 - AmplitudeBasedLabeller ([doc](/docs/AmplitudeBasedLabeler.md))
-- HawkesBSI ([doc](/docs/HawkesBSI.md))
-- HawkesBVC ([doc](/docs/HawkesBVC.md))
+- HawkesBSI ([doc](/docs/HawkesBSI.tex.md))
+- HawkesBVC ([doc](/docs/HawkesBVC.tex.md))
 
 
