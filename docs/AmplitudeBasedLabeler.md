@@ -1,4 +1,8 @@
 # AmplitudeBasedLabeler
+A few years ago developed an algorithm to label momentum and trend patterns in intra-day or daily price data.  
+In spite of its simplicity, has performed quite well as compared to a number of more complicated statistical approaches.  
+As is not especially proprietary, hence thought to share this more broadly.
+
 The labeler behavior is defined by two parameters (which seem intuitive from a trading perspective):
 
 - minimum trend / momentum amplitude of interest
