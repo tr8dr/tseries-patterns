@@ -31,6 +31,7 @@ from plotnine import *
 
 from ..common import PriceType
 from ..common import scale_x_datetime_auto
+from ..common import columnFor
 
 
 cdef int max (int a, int b):
@@ -83,12 +84,6 @@ cdef class AmplitudeBasedLabeler:
         :param type: indicates whether in price, cumulative BPS, or cumulative return form
         :return: labels for the series
         """
-        def columnFor (df: pd.DataFrame, names: list):
-            for id in names:
-                if id in df.columns:
-                    return df[id]
-            raise Exception ("could not find price or time column in supplied dataframe")
-
         if isinstance(prices, pd.DataFrame):
             times = columnFor (prices, ["time", "date", "Datetime", "stamp"])
             prices = columnFor (prices, ["Adj Close", "Close", "close", "price"])
