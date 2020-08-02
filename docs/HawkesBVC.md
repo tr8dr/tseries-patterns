@@ -7,7 +7,7 @@ The cdf of the volatility normalized return of each bar indicates whether the re
 left (0.0) or right (1.0) of the distribution.  For strong upward (downward) moves, we expect a cdf value approaching
 1.0 (0.0).  We can calculate the signed volume for each bar as:
 
-<img src="https://render.githubusercontent.com/render/math?math=signed\, volume_t = 2 (volume_t \; cdf(r_t / \sigma_{t})) - 1">
+<img src="https://render.githubusercontent.com/render/math?math=signed \, volume_t = 2 (volume_t \; cdf(r_t / \sigma_{t})) - 1">
 
 To get an overall sense of signed buy/sell imbalance momentum we use a hawkes process.  Hawkes processes model the intensity 
 of events and are applicable for events which tend to cluster in a self-exciting manner.  The form of the Hawkes process we use is:
@@ -23,7 +23,7 @@ over a window.  Other implementations may wish to use volume weighted standard d
 
 Putting this together the indicator is implemented as:
 
-<img src="https://render.githubusercontent.com/render/math?math=\begin{align*} signed \, volume_t &= 2 (volume_t \; cdf(r_t / \sigma_{t})) - 1 \\ bvc(t) &= bvc(t-1) e^{-\kappa} + signed \, volume_t \end{align*}"/>
+<img src="https://render.githubusercontent.com/render/math?math=%5Cbegin%7Balign%2A%7D%20signed%20%5C%2C%20volume_t%20%26%3D%202%20%28volume_t%20%5C%3B%20cdf%28r_t%20%2F%20%5Csigma_%7Bt%7D%29%29%20-%201%20%5C%5C%20bvc%28t%29%20%26%3D%20bvc%28t-1%29%20e%5E%7B-%5Ckappa%7D%20%2B%20signed%20%5C%2C%20volume_t%20%5Cend%7Balign%2A%7D"/>
 
 This implementation of the BVC signal requires a market data source that includes volume.   The data frame should contain:
 
