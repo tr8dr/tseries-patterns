@@ -3,3 +3,6 @@ plotnine>=0.7.0
 setuptools>=41.2.0
 numpy>=1.17.2
 pandas>=0.25.1
+hmmlearn>=0.2.3
+tensorflow>=2.2.0
+keras>=2.4.3
