@@ -65,7 +65,7 @@ cdef class HawkesBSI:
 
         self._compute_bsi (bsi, dv.values, alpha)
         self._metrics = pd.DataFrame({'stamp': times, 'price': prices, 'bsi': bsi})
-
+        return self._metrics
 
     def plot(
         self,
