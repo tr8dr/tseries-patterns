@@ -35,7 +35,7 @@ from ..common import columnFor
 
 cdef class HawkesBVC:
     """
-    Use a hawkes process to model a self-exciting overlap on top of the BVC (bulk volume classifier)
+    Use a hawkes process to model a self-exciting overlay on top of the BVC (bulk volume classifier)
     """
     cdef int _window
     cdef double _kappa
@@ -81,7 +81,7 @@ cdef class HawkesBVC:
 
         self._compute_bvc (bvc, volume.values, labels, alpha)
         self._metrics = pd.DataFrame({'stamp': times, 'price': prices, 'bvc': bvc})
-
+        return self._metrics
 
     def plot(
         self,
