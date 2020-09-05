@@ -63,7 +63,7 @@ cdef class HawkesBSI:
         alpha = np.exp (-self._kappa)
         bsi = np.zeros(dv.shape[0], dtype=float)
 
-        self._compute_bsi (bsi, dv.values, alpha)
+        self._compute_bsi (bsi, np.array(dv.values, dtype=float), alpha)
         self._metrics = pd.DataFrame({'stamp': times, 'price': prices, 'bsi': bsi})
         return self._metrics
 
