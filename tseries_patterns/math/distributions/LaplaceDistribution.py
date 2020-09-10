@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2020 Jonathan Shore
+# Copyright (c) 2018 Jonathan Shore
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,28 +24,50 @@
 
 
 import numpy as np
-import pandas as pd
-from .HMM import HMM
-
-from tseries_patterns.math.distributions import ExponentialDistribution
 
 
-class HMMExponential2State(HMM):
-    """
-    A two state HMM using exponential distributions
-    """
+class LaplaceDistribution:
 
-    def __init__(
-        self,
-        decay = 2.0,
-        ss_prob=0.9999,
-        state_probs=np.array([1 / 2, 1 / 2])):
+    def __init__(self, mu: float, beta: float):
+        self.mu = mu
+        self.beta = beta
 
-        transition_matrix = np.array([[ss_prob, 1 - ss_prob], [1 - ss_prob, ss_prob]])
-        short = ExponentialDistribution(-1.0, decay, 1.0)
-        long = ExponentialDistribution(+1.0, decay, -1.0)
 
-        super().__init__(
-            distributions = [short.logf, long.logf],
-            transition_matrix=transition_matrix,
-            state_probs=state_probs)
+    def f(self, x):
+        """
+        density function
+
+        :param x: value on domain or an array of values
+        :return:
+        """
+        return 1 / (2*self.beta) * np.exp(-np.abs(x - self.mu) / self.beta)
+
+
+    def logf(self, x):
+        """
+        Log density function
+
+        :param x: value on domain or an array of values
+        :return:
+        """
+        beta = self.beta
+        return -(np.abs(x - self.mu) + beta * np.log(2 * beta)) / beta
+
+
+    def cum(self, x0: float, x1: float):
+        """
+        cumulative density function
+        """
+        mu = self.mu
+        beta = self.beta
+
+        if x0 <= self.mu:
+            cdf1 = 0.5 * np.exp((x0 - mu) / beta)
+        else:
+            cdf1 = 1 - 0.5 * np.exp(-(x0 - mu) / beta)
+
+        if x1 <= self.mu:
+            cdf1 = 0.5 * np.exp((x1 - mu) / beta)
+        else:
+            cdf1 = 1 - 0.5 * np.exp(-(x1 - mu) / beta)
+

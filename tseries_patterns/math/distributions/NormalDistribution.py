@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2020 Jonathan Shore
+# Copyright (c) 2018 Jonathan Shore
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,28 +24,40 @@
 
 
 import numpy as np
-import pandas as pd
-from .HMM import HMM
-
-from tseries_patterns.math.distributions import ExponentialDistribution
+import scipy.stats
 
 
-class HMMExponential2State(HMM):
-    """
-    A two state HMM using exponential distributions
-    """
+class NormalDistribution:
 
-    def __init__(
-        self,
-        decay = 2.0,
-        ss_prob=0.9999,
-        state_probs=np.array([1 / 2, 1 / 2])):
+    def __init__(self, mu: float, sigma: float):
+        self.mu = mu
+        self.sigma = sigma
+        self.dist = scipy.stats.norm(mu, sigma)
 
-        transition_matrix = np.array([[ss_prob, 1 - ss_prob], [1 - ss_prob, ss_prob]])
-        short = ExponentialDistribution(-1.0, decay, 1.0)
-        long = ExponentialDistribution(+1.0, decay, -1.0)
 
-        super().__init__(
-            distributions = [short.logf, long.logf],
-            transition_matrix=transition_matrix,
-            state_probs=state_probs)
+    def f(self, x):
+        """
+        density function
+
+        :param x: value on domain or an array of values
+        :return:
+        """
+        return self.dist.pdf(x)
+
+
+    def logf(self, x):
+        """
+        Log density function
+
+        :param x: value on domain or an array of values
+        :return:
+        """
+        return np.log(self.dist.pdf(x))
+
+
+    def cum(self, x0: float, x1: float):
+        """
+        cumulative density function
+        """
+        return self.dist.cdf(x1) - self.dist.cdf(x0)
+

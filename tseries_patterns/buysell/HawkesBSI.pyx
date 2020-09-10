@@ -69,6 +69,8 @@ cdef class HawkesBSI:
 
     def plot(
         self,
+        Tstart = None,
+        Tend = None,
         color_price = 'darkgray',
         color_bsi = "#10a4f4",
         figsize = (10,8),
@@ -82,8 +84,15 @@ cdef class HawkesBSI:
         :param title: title associated with graph
         :return:
         """
-        df1 = pd.DataFrame({'stamp': self._metrics["stamp"], 'price': self._metrics["price"], 'pane': ' price'})
-        df2 = pd.DataFrame({'stamp': self._metrics["stamp"], 'value': self._metrics["bsi"], 'pane': 'BSI'})
+        if Tstart is None:
+            Tstart = self._metrics["stamp"].iloc[0]
+        if Tend is None:
+            Tend = self._metrics["stamp"].iloc[-1]
+
+        sub = self._metrics.loc[(self._metrics.stamp >= Tstart) & (self._metrics.stamp <= Tend)]
+
+        df1 = pd.DataFrame({'stamp': sub["stamp"], 'price': sub["price"], 'pane': ' price'})
+        df2 = pd.DataFrame({'stamp': sub["stamp"], 'value': sub["bsi"], 'pane': 'BSI'})
 
         plotnine.options.figure_size = figsize
         v = (ggplot() +
