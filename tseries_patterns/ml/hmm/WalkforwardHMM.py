@@ -29,8 +29,8 @@ import multiprocessing as mp
 from math import ceil
 from math import sin
 
-from research.ml.hmm import HMM
-from research.math.distributions import NormalDistribution
+from tseries_patterns.ml.hmm import HMM
+from tseries_patterns.math.distributions import NormalDistribution
 
 
 class WalkforwardHMM:
