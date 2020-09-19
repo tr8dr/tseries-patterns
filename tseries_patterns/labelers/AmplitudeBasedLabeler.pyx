@@ -29,9 +29,9 @@ import numpy as np
 import plotnine
 from plotnine import *
 
-from ..common import PriceType
-from ..common import scale_x_datetime_auto
-from ..common import columnFor
+from tseries_patterns.common import PriceType
+from tseries_patterns.common.rendering import scale_x_datetime_auto
+from tseries_patterns.common.utils import columnFor
 
 
 cdef int max (int a, int b):

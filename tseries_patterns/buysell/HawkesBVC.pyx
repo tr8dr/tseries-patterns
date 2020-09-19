@@ -29,8 +29,8 @@ from scipy.stats import t as studentt
 import plotnine
 from plotnine import *
 
-from ..common import scale_x_datetime_auto, new_grid
-from ..common import columnFor
+from ..common.rendering import scale_x_datetime_auto, new_grid
+from ..common.utils import columnFor
 
 
 cdef class HawkesBVC:

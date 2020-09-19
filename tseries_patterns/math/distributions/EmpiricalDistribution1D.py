@@ -28,7 +28,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from research.core.utils import constrain, frange, cbind
+from tseries_patterns.common.utils import constrain, frange, cbind
 
 
 class EmpiricalDistribution1D:
