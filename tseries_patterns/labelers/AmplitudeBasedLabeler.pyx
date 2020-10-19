@@ -333,18 +333,22 @@ cdef class AmplitudeBasedLabeler:
                     Vmaxback = distance
                     Imaxback = i
 
-            # label forward region if meets size requirement
-            if Vmaxfwd >= self.minamp:
-                self._apply_label (labels, Istart, Imaxfwd, dir)
-                self._apply_label (labels, Imaxfwd+1, Imaxback-1, 0.0)
+            # if neither direction meets required minimum, zero out
+            if Vmaxfwd < self.minamp and Vmaxback < self.minamp:
+                 self._apply_label (labels, Istart, Iend, 0.0)
             else:
-                self._apply_label (labels, Istart, Imaxback, 0.0)
+                # label forward region if meets size requirement
+                if Vmaxfwd >= self.minamp:
+                    self._apply_label (labels, Istart, Imaxfwd, dir)
+                    self._apply_label (labels, Imaxfwd+1, Imaxback-1, 0.0)
+                else:
+                    self._apply_label (labels, Istart, Imaxback, 0.0)
 
-            # label backward region is meets size requirement
-            if Vmaxback >= self.minamp:
-                self._apply_label (labels, Imaxback, Iend, dir)
-            else:
-                self._apply_label (labels, max(Imaxback, Imaxfwd+1), Iend, 0.0)
+                # label backward region if meets size requirement
+                if Vmaxback >= self.minamp:
+                    self._apply_label (labels, Imaxback, Iend, dir)
+                else:
+                    self._apply_label (labels, max(Imaxback, Imaxfwd+1), Iend, 0.0)
 
             Ipos = Iend+1
 
