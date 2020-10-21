@@ -85,7 +85,7 @@ cdef class AmplitudeBasedLabeler:
         :return: labels for the series
         """
         if isinstance(prices, pd.DataFrame):
-            times = columnFor (prices, ["time", "date", "Datetime", "stamp"])
+            times = columnFor (prices, ["time", "date", "Date","Datetime", "stamp"])
             prices = columnFor (prices, ["Adj Close", "Close", "close", "price"])
         else:
             prices = pd.Series(prices)

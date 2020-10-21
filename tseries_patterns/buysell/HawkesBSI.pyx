@@ -53,7 +53,7 @@ cdef class HawkesBSI:
         if isinstance(df.index, pd.DatetimeIndex):
             times = df.index
         else:
-            times = columnFor(df, ['stamp','time','date','datetime'])
+            times = columnFor(df, ['stamp','time','Date','date','datetime'])
 
         prices = columnFor(df, ['close','Close','price'])
         buyvol = columnFor(df, ['buyvolume', 'BuyVolume'])
