@@ -3,6 +3,8 @@ A few years ago developed an algorithm to label momentum and trend patterns in i
 In spite of its simplicity, has performed quite well as compared to a number of more complicated statistical approaches.  
 As is not especially proprietary, hence thought to share this more broadly.
 
+Please note that the labeler makes use of a forward window to achieve 0 lag labeling.  Hence if you want to use a technique like this in live trading, would only be useful as a way to identify prior price moves, but cannot indicate the direction of the current time period.  The tradeoff is between 0 lag + lookahead or lag + no lookahead.
+
 The labeler behavior is defined by two parameters (which seem intuitive from a trading perspective):
 
 - minimum trend / momentum amplitude of interest
