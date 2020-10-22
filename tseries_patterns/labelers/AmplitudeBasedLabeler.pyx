@@ -179,7 +179,7 @@ cdef class AmplitudeBasedLabeler:
                 Vmin = v
 
             # check for "inactive" period where price has not progressed since latest min/max (upward direction)
-            elif Imax > Imin and (Icursor - Imax) >= self.Tinactive and (cumr[Icursor] - Vmax) < self.minamp:
+            elif Imax > Imin and (Icursor - Imax) >= self.Tinactive and v <= Vmax:
                 if (Vmax - Vmin) >= self.minamp:
                     self._apply_label (labels, Istart, Imin-1, 0.0)
                     self._apply_label (labels, Imin, Imax, +1.0)
@@ -194,7 +194,7 @@ cdef class AmplitudeBasedLabeler:
                 Vmin = v
 
             # check for "inactive" period where price has not progressed since latest min/max (downward direction)
-            elif Imin > Imax and (Icursor - Imin) >= self.Tinactive and (Vmin - cumr[Icursor]) < self.minamp:
+            elif Imin > Imax and (Icursor - Imin) >= self.Tinactive and v >= Vmin:
                 if (Vmax - Vmin) >= self.minamp:
                     self._apply_label (labels, Istart, Imax-1, 0.0)
                     self._apply_label (labels, Imax, Imin, -1.0)
