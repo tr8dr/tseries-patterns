@@ -32,7 +32,7 @@ class PriceType(Enum):
     CUMBPS = 2
     CUMR = 3
 
-    def toBps (self, prices):
+    def toBps (self, prices, scale = 1e4):
         # 1st get into numpy array form
         if isinstance(prices, np.ndarray):
             pass
@@ -44,6 +44,6 @@ class PriceType(Enum):
         if self.value == 2:
             return prices
         elif self.value == 1:
-            return np.log(prices / prices[0]) * 1e4
+            return np.log(prices / prices[0]) * scale
         else:
-            return prices * 1e4
+            return prices * scale
