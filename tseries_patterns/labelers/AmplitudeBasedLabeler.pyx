@@ -76,7 +76,7 @@ cdef class AmplitudeBasedLabeler:
         self.df = None
 
 
-    def label (self, prices, type = PriceType.PRICE):
+    def label (self, prices, type = PriceType.PRICE, scale = 1e4):
         """
         Perform labeling
 
@@ -91,7 +91,7 @@ cdef class AmplitudeBasedLabeler:
             prices = pd.Series(prices)
             times = np.array(0,prices.shape[0])
 
-        cumr = type.toBps(prices)
+        cumr = type.toBps(prices, scale = scale)
         n = cumr.shape[0]
         labels = np.zeros(n).astype(np.double)
 
